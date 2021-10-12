@@ -5,7 +5,11 @@ function same([x, y], [j, k]) {}
 // The game state to search for `cell` is passed as the `this` value of the function.
 function contains(cell) {}
 
-const printCell = (cell, state) => {};
+const printCell = (cell, state) => {
+  // use previous contains functions call method and pass state and cell  
+  // if alive return \u25A3 else return \u25A2
+  return contains.call(state, cell) ? "\u25A3": "\u25A2";
+};
 
 const corners = (state = []) => {};
 

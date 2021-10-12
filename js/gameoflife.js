@@ -1,4 +1,7 @@
-function seed() {}
+function seed(...args) {
+  // convert arguments object into an array with rest parameters ====> ...args
+  return args;
+}
 
 function same([x, y], [j, k]) {}
 

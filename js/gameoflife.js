@@ -1,6 +1,14 @@
 function seed() {}
 
-function same([x, y], [j, k]) {}
+function same([x, y], [j, k]) {
+  // capture each cell
+  const cell1 = arguments[0];
+  const cell2 = arguments[1];
+
+  // use array method every() to check whether the values in cell1 match the values in cell2 
+  // returns true if they match false if they dont
+  return cell1.every((val, index) => val === cell2[index]);
+}
 
 // The game state to search for `cell` is passed as the `this` value of the function.
 function contains(cell) {}

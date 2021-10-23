@@ -30,7 +30,32 @@ const printCell = (cell, state) => {
   return contains.call(state, cell) ? "\u25A3": "\u25A2";
 };
 
-const corners = (state = []) => {};
+function corners(state = []) {
+  // create a variable and set its value to state
+  const gameState = state;
+  // use Math.max method to find the highestX and highestY 
+  // use rest operator to gather all the x and y values to find the highest numbers
+  const highestX = Math.max(...gameState.map(cell => cell[0]));
+  const highestY = Math.max(...gameState.map(cell => cell[1]));
+
+  // set topRight and bottomLeft
+  const tRight = [highestX, highestY];
+  const bLeft = [1, 1];
+
+  // check if game state is empty and if true return specified topRight and bottomLeft
+  if(!gameState.length) {
+    console.log("empty")
+    return {
+      topRight: [0,0],
+      bottomLeft: [0,0]
+    }
+  } else {
+      return {
+        topRight: tRight,
+        bottomLeft: bLeft
+    }
+  }
+}
 
 const printCells = (state) => {};
 

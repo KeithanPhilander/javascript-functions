@@ -24,7 +24,11 @@ function contains(cell) {
   return this.some(item => JSON.stringify(item) === cellStr);
 }
 
-const printCell = (cell, state) => {};
+const printCell = (cell, state) => {
+  // use previous contains functions call method and pass state and cell  
+  // if alive return \u25A3 else return \u25A2
+  return contains.call(state, cell) ? "\u25A3": "\u25A2";
+};
 
 const corners = (state = []) => {};
 

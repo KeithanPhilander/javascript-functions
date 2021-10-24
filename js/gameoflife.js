@@ -31,45 +31,105 @@ const printCell = (cell, state) => {
 };
 
 function corners(state = []) {
-  // create a variable and set its value to state
-  const gameState = state;
-  // use Math.max method to find the highestX and highestY 
-  // use rest operator to gather all the x and y values to find the highest numbers
-  const highestX = Math.max(...gameState.map(cell => cell[0]));
-  const highestY = Math.max(...gameState.map(cell => cell[1]));
+  // // create a variable and set its value to state
+  // const gameState = state;
+  // // use Math.max method to find the highestX and highestY 
+  // // use rest operator to gather all the x and y values to find the highest numbers
+  // const highestX = Math.max(...gameState.map(cell => cell[0]));
+  // const highestY = Math.max(...gameState.map(cell => cell[1]));
 
-  // set topRight and bottomLeft
-  const tRight = [highestX, highestY];
-  const bLeft = [1, 1];
+  // // set topRight and bottomLeft
+  // const tRight = [highestX, highestY];
+  // const bLeft = [1, 1];
 
-  // check if game state is empty and if true return specified topRight and bottomLeft
-  if(!gameState.length) {
-    console.log("empty")
+  // // check if game state is empty and if true return specified topRight and bottomLeft
+  // if(!gameState.length) {
+  //   console.log("empty")
+  //   return {
+  //     topRight: [0,0],
+  //     bottomLeft: [0,0]
+  //   }
+  // } else {
+  //     return {
+  //       topRight: tRight,
+  //       bottomLeft: bLeft
+  //   }
+  // }
+
+
+  if (state.length === 0) {
     return {
-      topRight: [0,0],
-      bottomLeft: [0,0]
-    }
-  } else {
-      return {
-        topRight: tRight,
-        bottomLeft: bLeft
-    }
+      topRight: [0, 0],
+      bottomLeft: [0, 0]
+    };
   }
+
+  const xs = state.map(([x, _]) => x);
+  const ys = state.map(([_, y]) => y);
+  return {
+    topRight: [Math.max(...xs), Math.max(...ys)],
+    bottomLeft: [Math.min(...xs), Math.min(...ys)]
+  };
 }
 
-const printCells = (state) => {};
+const printCells = (state) => {
+  // use corners function to retrieve topRight and bottomLeft
+  const { topRight, bottomLeft } = corners(state);
+  let accumulator = "";
+  for (let y = topRight[1]; y >= bottomLeft[1]; y--) {
+    let row = [];
+    for (let x = bottomLeft[0]; x <= topRight[0]; x++) {
+      row.push(printCell([x, y], state));
+    }
+    accumulator += row.join(" ") + "\n";
+  }
+  return accumulator;
+  
+};
 
-const getNeighborsOf = ([x, y]) => {};
+const getNeighborsOf = ([x, y]) => {
+  return [
+    [x-1, y+1],[x, y+1],[x+1, y+1],
+    [x-1,   y],         [x+1,   y], 
+    [x-1, y-1],[x, y-1],[x+1, y-1]
+  ]
+};
 
-const getLivingNeighbors = (cell, state) => {};
+const getLivingNeighbors = (cell, state) => {
+  return getNeighborsOf(cell).filter(c => contains.bind(state)(c));
+};
 
-const willBeAlive = (cell, state) => {};
+const willBeAlive = (cell, state) => {
+  const livingNeighbors = getLivingNeighbors(cell, state)
+  return (
+    livingNeighbors.length === 3 ||
+    (contains.call(state, cell) && livingNeighbors.length === 2)
+  );
+};
 
-const calculateNext = (state) => {};
+const calculateNext = (state) => {
+  const { bottomLeft, topRight } = corners(state);
+  let result = [];
+  for (let y = topRight[1] + 1; y >= bottomLeft[1] - 1; y--) {
+    for (let x = bottomLeft[0] - 1; x <= topRight[0] + 1; x++) {
+      result = result.concat(willBeAlive([x, y], state) ? [[x, y]] : []);
+    }
+  }
+  return result;
+};
 
-const iterate = (state, iterations) => {};
+const iterate = (state, iterations) => {
+  const states = [state];
+  for(let i = 0; i < iterations; i++) {
+      states.push(calculateNext(states[states.length-1]));
+  }
+  return states;
+};
 
-const main = (pattern, iterations) => {};
+const main = (pattern, iterations) => {
+  const results = iterate(startPatterns[pattern], iterations);
+  results.forEach(r => console.log(printCells(r)));
+};
 
 const startPatterns = {
     rpentomino: [
